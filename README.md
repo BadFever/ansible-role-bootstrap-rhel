@@ -1,6 +1,6 @@
 # ansible-role-bootstrap-rhel
 
-Bootstraps rhel systems for templating.
+Bootstraps rhel systems for vm templating.
 
 ## Requirements
 
