@@ -1,28 +1,26 @@
 ---
 - name: install required packages
   yum:
-    name: "{{ item }}"
+    name:
+      - gcc
+      - make
+      - kernel-headers
+      - kernel-devel
+      - perl
+      - wget
+      - open-vm-tools
     state: present
-  with_items:
-    - gcc
-    - make
-    - kernel-headers
-    - kernel-devel
-    - perl
-    - wget
-    - open-vm-tools
+    autoclean: yes
 
-- name: Find ssh host keys
+
+- name: find ssh host keys
   find:
     paths: /etc/ssh/
     patterns: "*key*"
   register: host_keys_to_delete
 
-- name: Delete ssh host keys
+- name: delete ssh host keys
   file:
     path: "{{ item.path }}"
     state: absent
   with_items: "{{ host_keys_to_delete.files }}"
-
-# - name: Clean up yum
-#  command: yum clean all
