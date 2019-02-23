@@ -10,7 +10,6 @@
       - wget
       - open-vm-tools
     state: present
-    autoclean: true
 
 
 - name: find ssh host keys
