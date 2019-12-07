@@ -39,13 +39,13 @@
     state: present
     mode: 0440
     create: true
-    validate: 'visudo -cf %s'
+    validate: "visudo -cf %s"
   when: bootstrap_vagrant_allow_password_less_sudo | bool
   become: true
 
 - name: Set includedir in sudoers
   lineinfile:
-    dest: /etc/sudoers
+    path: /etc/sudoers
     line: "#includedir /etc/sudoers.d"
     state: present
     validate: "/usr/sbin/visudo -cf %s"
@@ -54,9 +54,17 @@
 
 - name: Check ssh config
   lineinfile:
-    dest: /etc/ssh/sshd_config
+    path: /etc/ssh/sshd_config
     line: "PubkeyAuthentication yes"
     state: present
+  notify: "Restart sshd"
+  become: true
+
+- name: Allow password authentication
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "^#PasswordAuthentication"
+    line: "PasswordAuthentication  yes"
   notify: "Restart sshd"
   become: true
 
