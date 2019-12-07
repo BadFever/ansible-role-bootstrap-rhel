@@ -11,18 +11,6 @@
       - open-vm-tools
     state: present
 
-- name: Find ssh host keys
-  find:
-    paths: /etc/ssh/
-    patterns: "*key*"
-  register: host_keys_to_delete
-
-- name: Delete ssh host keys
-  file:
-    path: "{{ item.path }}"
-    state: absent
-  with_items: "{{ host_keys_to_delete.files }}"
-
 - name: Create vagrant user
   user:
     name: "{{ bootstrap_vagrant_user }}"
@@ -71,3 +59,15 @@
     state: present
   notify: "Restart sshd"
   become: true
+
+- name: Find ssh host keys
+  find:
+    paths: /etc/ssh/
+    patterns: "*key*"
+  register: host_keys_to_delete
+
+- name: Delete ssh host keys
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  with_items: "{{ host_keys_to_delete.files }}"
